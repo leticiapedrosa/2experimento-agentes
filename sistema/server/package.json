@@ -1,0 +1,19 @@
+{
+  "name": "@sistema/server",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test:acceptance": "cucumber-js --require-module ts-node/register --require ./features-support/**/*.ts --require ./features-step-definitions/**/*.ts features/**/*.feature"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.8.1",
+    "@types/node": "^24.0.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.0",
+    "typescript": "^5.8.3"
+  }
+}
+
