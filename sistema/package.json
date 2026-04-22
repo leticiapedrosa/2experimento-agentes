@@ -6,11 +6,15 @@
     "client"
   ],
   "scripts": {
+    "dev": "concurrently -k -n server,client -c blue,green \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "npm run dev --workspace server",
     "dev:client": "npm run dev --workspace client",
     "build:server": "npm run build --workspace server",
     "build:client": "npm run build --workspace client",
     "test:acceptance": "npm run test:acceptance --workspace server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
   }
 }
 
