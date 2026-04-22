@@ -1,11 +1,26 @@
 import { Router } from "express";
+import { randomUUID } from "crypto";
 import type { QuestionRepository } from "../repository/questionRepository";
 import { generateExam } from "../services/examGenerator";
 import { createExamPdf } from "../services/examPdf";
+import { ExamStore } from "../services/examStore";
+import { generateGabaritoCsv } from "../services/gabaritoCsv";
 
 type GenerateExamBody =
-  | { questionIds: string[]; quantity?: never }
-  | { quantity: number; questionIds?: never };
+  | {
+      questionIds: string[];
+      quantity?: never;
+      disciplina?: string;
+      professor?: string;
+      data?: string;
+    }
+  | {
+      quantity: number;
+      questionIds?: never;
+      disciplina?: string;
+      professor?: string;
+      data?: string;
+    };
 
 function wantsJson(req: any): boolean {
   const accept = String(req.headers?.accept ?? "");
@@ -16,6 +31,7 @@ function wantsJson(req: any): boolean {
 
 export function createExamsRouter(repo: QuestionRepository) {
   const router = Router();
+  const store = new ExamStore();
 
   router.post("/generate", (req, res) => {
     const body = req.body as Partial<GenerateExamBody>;
@@ -48,16 +64,41 @@ export function createExamsRouter(repo: QuestionRepository) {
     }
 
     const exam = generateExam(questions as any);
+    const examId = randomUUID();
+    const meta = {
+      disciplina: String((body as any).disciplina ?? ""),
+      professor: String((body as any).professor ?? ""),
+      data: String((body as any).data ?? "")
+    };
+
+    store.put({ examId, meta, exam });
 
     if (wantsJson(req)) {
-      return res.json(exam);
+      return res.json({ examId, ...meta, ...exam });
     }
 
-    const doc = createExamPdf(exam);
+    const doc = createExamPdf(exam, examId, {
+      disciplina: meta.disciplina || "[Nome]",
+      professor: meta.professor || "[Nome]",
+      data: meta.data || "[Data]"
+    });
+    res.setHeader("X-Exam-Id", examId);
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", 'attachment; filename="exam.pdf"');
     doc.pipe(res);
     doc.end();
+  });
+
+  router.get("/:examId/key.csv", (req, res) => {
+    const stored = store.get(req.params.examId);
+    if (!stored) return res.status(404).json({ error: "Exam not found" });
+    const csv = generateGabaritoCsv(stored);
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="gabarito-${stored.examId}.csv"`
+    );
+    res.send(csv);
   });
 
   return router;

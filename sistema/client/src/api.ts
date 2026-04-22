@@ -41,11 +41,16 @@ export const api = {
   deleteQuestion(id: string): Promise<void> {
     return http<void>(`/api/questions/${id}`, { method: "DELETE" });
   },
-  async generateExamPdf(questionIds: string[]): Promise<Blob> {
+  async generateExamPdf(input: {
+    questionIds: string[];
+    disciplina?: string;
+    professor?: string;
+    data?: string;
+  }): Promise<{ blob: Blob; examId: string | null }> {
     const res = await fetch("/api/exams/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ questionIds })
+      body: JSON.stringify(input)
     });
     if (!res.ok) {
       const maybe = await res
@@ -57,6 +62,12 @@ export const api = {
           : `Request failed (${res.status})`;
       throw new Error(msg);
     }
+    const examId = res.headers.get("x-exam-id");
+    return { blob: await res.blob(), examId };
+  },
+  async downloadGabaritoCsv(examId: string): Promise<Blob> {
+    const res = await fetch(`/api/exams/${examId}/key.csv`);
+    if (!res.ok) throw new Error(`Failed to download gabarito (${res.status})`);
     return await res.blob();
   }
 };

@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/types.ts","./src/components/questionform.tsx","./src/components/questionlist.tsx","./src/pages/generateexampage.tsx","./src/pages/questionmanagementpage.tsx"],"version":"5.9.3"}
+{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/types.ts","./src/components/questionform.tsx","./src/components/questionlist.tsx","./src/pages/generateexampage.tsx","./src/pages/gradingreportspage.tsx","./src/pages/questionmanagementpage.tsx"],"version":"5.9.3"}

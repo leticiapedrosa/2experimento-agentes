@@ -19,6 +19,10 @@ export function GenerateExamPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [lastExamId, setLastExamId] = useState<string | null>(null);
+  const [disciplina, setDisciplina] = useState("");
+  const [professor, setProfessor] = useState("");
+  const [data, setData] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -46,12 +50,29 @@ export function GenerateExamPage() {
     setGenerating(true);
     setError(null);
     try {
-      const pdf = await api.generateExamPdf(selectedIds);
-      downloadBlob(pdf, "exam.pdf");
+      const res = await api.generateExamPdf({
+        questionIds: selectedIds,
+        disciplina,
+        professor,
+        data
+      });
+      setLastExamId(res.examId);
+      downloadBlob(res.blob, "exam.pdf");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to generate exam");
     } finally {
       setGenerating(false);
+    }
+  }
+
+  async function handleDownloadKey() {
+    if (!lastExamId) return;
+    setError(null);
+    try {
+      const blob = await api.downloadGabaritoCsv(lastExamId);
+      downloadBlob(blob, `gabarito-${lastExamId}.csv`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to download gabarito");
     }
   }
 
@@ -74,13 +95,56 @@ export function GenerateExamPage() {
           <div className="text-sm text-slate-700">
             Selected: <span className="font-semibold">{selectedIds.length}</span>
           </div>
-          <button
-            onClick={handleGenerate}
-            disabled={selectedIds.length === 0 || generating}
-            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            {generating ? "Generating…" : "Generate & Download PDF"}
-          </button>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <button
+              onClick={handleGenerate}
+              disabled={selectedIds.length === 0 || generating}
+              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {generating ? "Generating…" : "Generate & Download PDF"}
+            </button>
+            <button
+              onClick={handleDownloadKey}
+              disabled={!lastExamId}
+              className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 disabled:opacity-50"
+            >
+              Download Gabarito (CSV)
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div>
+            <label className="text-xs font-semibold text-slate-600">
+              Disciplina
+            </label>
+            <input
+              value={disciplina}
+              onChange={(e) => setDisciplina(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              placeholder="[Nome]"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-slate-600">
+              Professor
+            </label>
+            <input
+              value={professor}
+              onChange={(e) => setProfessor(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              placeholder="[Nome]"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-slate-600">Data</label>
+            <input
+              value={data}
+              onChange={(e) => setData(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              placeholder="[Data]"
+            />
+          </div>
         </div>
       </div>
 

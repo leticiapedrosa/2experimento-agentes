@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { GenerateExamPage } from "./pages/GenerateExamPage";
+import { GradingReportsPage } from "./pages/GradingReportsPage";
 import { QuestionManagementPage } from "./pages/QuestionManagementPage";
 
 export default function App() {
-  const [page, setPage] = useState<"questions" | "generate">("questions");
+  const [page, setPage] = useState<"questions" | "generate" | "grading">(
+    "questions"
+  );
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -37,12 +40,28 @@ export default function App() {
             >
               Generate Exam
             </button>
+            <button
+              onClick={() => setPage("grading")}
+              className={
+                page === "grading"
+                  ? "rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white"
+                  : "rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+              }
+            >
+              Grading &amp; Reports
+            </button>
           </nav>
         </div>
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-6">
-        {page === "questions" ? <QuestionManagementPage /> : <GenerateExamPage />}
+        {page === "questions" ? (
+          <QuestionManagementPage />
+        ) : page === "generate" ? (
+          <GenerateExamPage />
+        ) : (
+          <GradingReportsPage />
+        )}
       </main>
     </div>
   );
