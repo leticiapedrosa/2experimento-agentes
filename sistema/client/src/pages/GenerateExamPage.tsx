@@ -78,7 +78,7 @@ export function GenerateExamPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="text-lg font-semibold text-slate-900">Generate Exam</h2>
         <p className="mt-1 text-sm text-slate-600">
           Select questions and generate a downloadable PDF. Alternative scores are
@@ -99,14 +99,14 @@ export function GenerateExamPage() {
             <button
               onClick={handleGenerate}
               disabled={selectedIds.length === 0 || generating}
-              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50"
             >
               {generating ? "Generating…" : "Generate & Download PDF"}
             </button>
             <button
               onClick={handleDownloadKey}
               disabled={!lastExamId}
-              className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 disabled:opacity-50"
+              className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
             >
               Download Gabarito (CSV)
             </button>
@@ -121,7 +121,7 @@ export function GenerateExamPage() {
             <input
               value={disciplina}
               onChange={(e) => setDisciplina(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
               placeholder="[Nome]"
             />
           </div>
@@ -132,7 +132,7 @@ export function GenerateExamPage() {
             <input
               value={professor}
               onChange={(e) => setProfessor(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
               placeholder="[Nome]"
             />
           </div>
@@ -141,32 +141,32 @@ export function GenerateExamPage() {
             <input
               value={data}
               onChange={(e) => setData(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
               placeholder="[Data]"
             />
           </div>
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <h3 className="text-sm font-semibold text-slate-900">Questions</h3>
 
         {loading ? (
           <p className="mt-2 text-sm text-slate-600">Loading…</p>
         ) : questions.length === 0 ? (
           <p className="mt-2 text-sm text-slate-600">
-            No questions available. Create some questions first.
+            No questions found. Create your first one!
           </p>
         ) : (
           <div className="mt-3 divide-y divide-slate-200">
             {questions.map((q) => (
               <label
                 key={q.id}
-                className="flex cursor-pointer items-start gap-3 py-3"
+                className="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-3 hover:bg-slate-50"
               >
                 <input
                   type="checkbox"
-                  className="mt-1 h-4 w-4 rounded border-slate-300"
+                  className="mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600"
                   checked={Boolean(selected[q.id])}
                   onChange={(e) =>
                     setSelected((prev) => ({ ...prev, [q.id]: e.target.checked }))

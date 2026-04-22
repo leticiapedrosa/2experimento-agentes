@@ -63,7 +63,7 @@ export function QuestionManagementPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">
@@ -76,7 +76,7 @@ export function QuestionManagementPage() {
               setMode("create");
               setSelected(null);
             }}
-            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700"
           >
             New question
           </button>
@@ -104,7 +104,7 @@ export function QuestionManagementPage() {
 
         <div className="lg:col-span-2">
           {mode === "idle" ? (
-            <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-sm">
+            <div className="rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-sm">
               Select a question to edit, or create a new one.
               <div className="mt-3 rounded-lg bg-slate-50 p-3 text-xs text-slate-500">
                 Backend: <code className="font-mono">localhost:4000</code> · UI

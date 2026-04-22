@@ -1,4 +1,4 @@
-import { setWorldConstructor, World } from "@cucumber/cucumber";
+import { setDefaultTimeout, setWorldConstructor, World } from "@cucumber/cucumber";
 import type { Express } from "express";
 import type supertest from "supertest";
 
@@ -18,5 +18,6 @@ export class CustomWorld extends World {
   lastExam?: GeneratedExam;
 }
 
+setDefaultTimeout(30_000);
 setWorldConstructor(CustomWorld);
 

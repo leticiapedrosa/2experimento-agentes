@@ -7,13 +7,21 @@ type ExamPdfMeta = {
   data: string;
 };
 
-function drawHeader(doc: PDFKit.PDFDocument, meta: ExamPdfMeta) {
-  const top = doc.page.margins.top;
-  doc.fontSize(11).text(`Disciplina: ${meta.disciplina}`, 50, top - 30);
-  doc.fontSize(11).text(`Professor: ${meta.professor}`, 50, top - 15);
-  doc.fontSize(11).text(`Data: ${meta.data}`, 350, top - 15, { width: 200 });
-  doc.moveTo(50, top - 5).lineTo(545, top - 5).strokeColor("#e2e8f0").stroke();
-  doc.strokeColor("black");
+function drawHeaderFirstPage(doc: PDFKit.PDFDocument, meta: ExamPdfMeta) {
+  doc.fontSize(18).text("Exam", { align: "center" });
+  doc.moveDown(0.6);
+
+  doc
+    .roundedRect(50, doc.y, 495, 52, 8)
+    .fillAndStroke("#f8fafc", "#e2e8f0");
+  doc.fillColor("black");
+
+  const y = doc.y - 42;
+  doc.fontSize(11).text(`Disciplina: ${meta.disciplina}`, 62, y + 10);
+  doc.fontSize(11).text(`Professor: ${meta.professor}`, 62, y + 28);
+  doc.fontSize(11).text(`Data: ${meta.data}`, 350, y + 28, { width: 180 });
+
+  doc.moveDown(1.4);
 }
 
 function drawFooter(doc: PDFKit.PDFDocument, examId: string) {
@@ -38,59 +46,51 @@ export function createExamPdf(
     margin: 50
   });
 
-  const applyDecorations = () => {
-    drawHeader(doc, meta);
-    drawFooter(doc, examId);
-  };
+  drawHeaderFirstPage(doc, meta);
+  drawFooter(doc, examId);
+  doc.on("pageAdded", () => drawFooter(doc, examId));
 
-  applyDecorations();
-  doc.on("pageAdded", applyDecorations);
-
-  doc.y = 70;
-  doc.fontSize(16).text("Exam", { align: "center" });
   doc
-    .moveDown(0.2)
     .fontSize(9)
     .fillColor("gray")
     .text(`Generated at: ${exam.generatedAt}`, { align: "center" });
-  doc.fillColor("black").moveDown(0.8);
+  doc.fillColor("black").moveDown(1.2);
 
   exam.questions.forEach((q, qIdx) => {
-    doc.fontSize(12).text(`${qIdx + 1}. ${q.description}`);
-    doc.moveDown(0.3);
+    doc.fontSize(12).text(`${qIdx + 1}. ${q.description}`, { lineGap: 2 });
+    doc.moveDown(0.6);
 
     q.alternatives.forEach((a, aIdx) => {
       const label = String.fromCharCode("A".charCodeAt(0) + aIdx);
       doc
         .fontSize(11)
-        .text(`${label}) [${a.score}] ${a.description}`, { indent: 14 });
+        .text(`${label}) [${a.score}] ${a.description}`, { indent: 14, lineGap: 3 });
+      doc.moveDown(0.2);
     });
 
-    doc.moveDown(0.4);
+    doc.moveDown(0.6);
     doc
       .fontSize(11)
-      .text("Final Sum: ________________________________", { indent: 14 });
-    doc
-      .fontSize(10)
-      .fillColor("gray")
-      .text(`Question Value (for grading): ${q.questionValue}`, { indent: 14 });
-    doc.fillColor("black");
-    doc.moveDown(1);
+      .text("Final Sum: ________________________________________________", {
+        indent: 14
+      });
+    doc.moveDown(1.2);
 
     if (doc.y > 720) doc.addPage();
   });
 
   doc.moveDown(0.5);
   doc.fontSize(12).text("Student information");
-  doc.moveDown(0.4);
-  doc.fontSize(11).text("Student Name: __________________________________________");
-  doc.moveDown(0.3);
-  doc.fontSize(11).text("CPF: ____________________________________________________");
-
+  doc.moveDown(0.8);
+  doc.fontSize(11).text("Student Name:");
   doc
-    .moveDown(0.5)
-    .fontSize(11)
-    .text(`Total Value (for grading): ${exam.totalValue}`);
+    .moveDown(0.2)
+    .text("____________________________________________________________");
+  doc.moveDown(0.8);
+  doc.fontSize(11).text("CPF:");
+  doc
+    .moveDown(0.2)
+    .text("____________________________________________________________");
 
   return doc;
 }

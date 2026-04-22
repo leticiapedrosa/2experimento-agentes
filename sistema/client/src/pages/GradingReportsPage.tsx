@@ -158,7 +158,7 @@ export function GradingReportsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="text-lg font-semibold text-slate-900">
           Grading &amp; Reports
         </h2>
@@ -175,7 +175,7 @@ export function GradingReportsPage() {
         ) : null}
 
         <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
             <div className="text-sm font-semibold text-slate-900">
               Official Answer Key (CSV)
             </div>
@@ -190,7 +190,7 @@ export function GradingReportsPage() {
             />
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
             <div className="text-sm font-semibold text-slate-900">
               Student Responses (CSV)
             </div>
@@ -205,7 +205,7 @@ export function GradingReportsPage() {
             />
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
             <div className="text-sm font-semibold text-slate-900">
               Grading mode
             </div>
@@ -231,7 +231,7 @@ export function GradingReportsPage() {
             </div>
             <button
               onClick={handleParse}
-              className="mt-4 w-full rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
+              className="mt-4 w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700"
             >
               Generate report
             </button>
@@ -239,7 +239,7 @@ export function GradingReportsPage() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="text-sm font-semibold text-slate-900">Grades report</h3>
@@ -250,7 +250,7 @@ export function GradingReportsPage() {
           <button
             onClick={exportReport}
             disabled={!report || report.rows.length === 0}
-            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 disabled:opacity-50"
+            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
             Download report CSV
           </button>
@@ -274,7 +274,7 @@ export function GradingReportsPage() {
               </thead>
               <tbody className="divide-y divide-slate-200">
                 {report.rows.map((r, idx) => (
-                  <tr key={idx} className="bg-white">
+                  <tr key={idx} className="bg-white hover:bg-slate-50">
                     <td className="px-3 py-2 text-slate-800">{r.studentName}</td>
                     <td className="px-3 py-2 font-mono text-xs text-slate-700">
                       {r.examId}

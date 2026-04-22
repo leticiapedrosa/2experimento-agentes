@@ -10,7 +10,7 @@ type Props = {
 export function QuestionList({ questions, loading, onEdit, onDelete }: Props) {
   if (loading) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <p className="text-sm text-slate-600">Loading questions…</p>
       </div>
     );
@@ -18,10 +18,12 @@ export function QuestionList({ questions, loading, onEdit, onDelete }: Props) {
 
   if (questions.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center">
-        <p className="text-sm text-slate-600">No questions yet.</p>
+      <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center shadow-sm">
+        <p className="text-sm font-semibold text-slate-700">
+          No questions found. Create your first one!
+        </p>
         <p className="mt-1 text-xs text-slate-500">
-          Create your first question to get started.
+          Your question bank is empty—add a question to start generating exams.
         </p>
       </div>
     );
@@ -32,7 +34,7 @@ export function QuestionList({ questions, loading, onEdit, onDelete }: Props) {
       {questions.map((q) => (
         <div
           key={q.id}
-          className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+          className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
@@ -46,7 +48,7 @@ export function QuestionList({ questions, loading, onEdit, onDelete }: Props) {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => onEdit(q)}
-                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
               >
                 Edit
               </button>
@@ -69,7 +71,7 @@ export function QuestionList({ questions, loading, onEdit, onDelete }: Props) {
               </thead>
               <tbody className="divide-y divide-slate-200">
                 {q.alternatives.map((a, idx) => (
-                  <tr key={idx} className="bg-white">
+                  <tr key={idx} className="bg-white hover:bg-slate-50">
                     <td className="px-3 py-2 text-slate-800">{a.description}</td>
                     <td className="px-3 py-2">
                       <span
