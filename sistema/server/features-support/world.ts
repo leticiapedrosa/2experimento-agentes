@@ -3,6 +3,7 @@ import type { Express } from "express";
 import type supertest from "supertest";
 
 import type { Question } from "../src/domain/types";
+import type { GeneratedExam } from "../src/domain/examTypes";
 import type { QuestionRepository } from "../src/repository/questionRepository";
 
 export class CustomWorld extends World {
@@ -14,6 +15,7 @@ export class CustomWorld extends World {
   lastBody?: unknown;
 
   lastQuestion?: Question;
+  lastExam?: GeneratedExam;
 }
 
 setWorldConstructor(CustomWorld);

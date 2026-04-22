@@ -40,6 +40,24 @@ export const api = {
   },
   deleteQuestion(id: string): Promise<void> {
     return http<void>(`/api/questions/${id}`, { method: "DELETE" });
+  },
+  async generateExamPdf(questionIds: string[]): Promise<Blob> {
+    const res = await fetch("/api/exams/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ questionIds })
+    });
+    if (!res.ok) {
+      const maybe = await res
+        .json()
+        .catch(() => ({ error: `Request failed (${res.status})` }));
+      const msg =
+        typeof maybe === "object" && maybe && "error" in maybe
+          ? String((maybe as any).error)
+          : `Request failed (${res.status})`;
+      throw new Error(msg);
+    }
+    return await res.blob();
   }
 };
 
